@@ -1,98 +1,103 @@
 // Leonardo Joystick Controller for Retro Gaming
 // 
-// Configure logical joystick using Joystick library
 // Configure joystick/button matrix using Keypad library
-// Configure Adafruit keypad matrix using Adafruit_Keypad library
+// Configure Adafruit keypad matrix using Keypad library
+// Configure logical joystick using Joystick library
 //
+
 // Include the needed libraries
-#include <Joystick.h>
-#include <Keypad.h>
-#include <Adafruit_Keypad.h>
+#include "Joystick.h"
+#include "Keypad.h"
 
-// Joystick Config
-const byte NUMBUTTONS = 22;
+// Button Matrix Config
+const byte BUTTON_MATRIX_ROWS = 4;
+const byte BUTTON_MATRIX_COLS = 4;
 
-// Keypad Config
-const byte KEYPADROWS = 4;
-const byte KEYPADCOLS = 4;
-
-byte keypad_buttons[KEYPADROWS][KEYPADCOLS] = {
-  {1,2,3,4},
-  {5,6,7,8},
-  {9,10,11,12},
-  {13,14,15,16}
+// Define the symbols on the buttons in the button matrix
+char button_matrix_buttons[BUTTON_MATRIX_ROWS][BUTTON_MATRIX_COLS] = {
+  {8,9,33,33},
+  {2,3,6,7},
+  {0,1,4,5},
+  {'U','D','L','R'}
 };
 
-byte keypad_rowPins[KEYPADROWS] = {6,7,8,9}; //connect to the row pinouts of the keypad
-byte keypad_colPins[KEYPADCOLS] = {2,3,4,5}; //connect to the column pinouts of the keypad
+// Connect to the row and column pinouts of the button matrix
+byte button_matrix_row_pins[BUTTON_MATRIX_ROWS] = {6,7,8,9}; 
+byte button_matrix_col_pins[BUTTON_MATRIX_COLS] = {2,3,4,5};
+
+// Initialize an instance of Keypad for the Button Matrix
+Keypad button_matrix_keypad = Keypad(makeKeymap(button_matrix_buttons), 
+  button_matrix_row_pins, 
+  button_matrix_col_pins, 
+  BUTTON_MATRIX_ROWS, 
+  BUTTON_MATRIX_COLS); 
 
 // Adafruit Keypad Config
-const byte ADAFRUITROWS = 4; // rows
-const byte ADAFRUITCOLS = 3; // columns
-// define the symbols on the buttons of the keypad
-byte adafruitKeys[ADAFRUITROWS][ADAFRUITCOLS] = {
-    {1, 2, 3},
-    {4, 5, 6},
-    {7, 8, 9},
-    {10,11,12}
+const byte ADAFRUIT_KEYPAD_ROWS = 4;
+const byte ADAFRUIT_KEYPAD_COLS = 3;
+
+// Define the symbols on the buttons of the keypad
+char adafruit_keypad_keys[ADAFRUIT_KEYPAD_ROWS][ADAFRUIT_KEYPAD_COLS] = {
+    {10,11,12},
+    {13,14,15},
+    {16,17,18},
+    {19,20,21}
 };
 
-byte adafruitRowPins[ADAFRUITROWS] = {A0,A1,A2,A3}; // connect to the row pinouts of the keypad
-byte adafruitColPins[ADAFRUITCOLS] = {10,11,12}; // connect to the column pinouts of the keypad
+// Connect to the row and column pinouts of the keypad
+byte adafruit_keypad_row_pins[ADAFRUIT_KEYPAD_ROWS] = {A0,A1,A2,A3};
+byte adafruit_keypad_col_pins[ADAFRUIT_KEYPAD_COLS] = {10,11,12};
 
-//initialize an instance of Keypad
-Keypad keypad_physical_buttons = Keypad(makeKeymap(keypad_buttons), 
-  keypad_colPins, 
-  keypad_rowPins, 
-  KEYPADCOLS, 
-  KEYPADROWS); 
+// Initialize an instance of Keypad for the Adafruit Keypad
+Keypad adafruit_keypad = Keypad(makeKeymap(adafruit_keypad_keys),
+  adafruit_keypad_row_pins,
+  adafruit_keypad_col_pins,
+  ADAFRUIT_KEYPAD_ROWS,
+  ADAFRUIT_KEYPAD_COLS);
 
-//initialize an instance of Adafruit_Keypad
-Adafruit_Keypad adafruitKeypad = Adafruit_Keypad(makeKeymap(adafruitKeys),
-  adafruitRowPins,
-  adafruitColPins,
-  ADAFRUITROWS,
-  ADAFRUITCOLS);
+// Joystick Config
+const byte JOYSTICK_BUTTON_COUNT = 22;
+const bool HAS_X_AXIS = true;
+const bool HAS_Y_AXIS = true; 
 
-//initialize an instance of Joystick with 22 buttons and an XY joystick;
+// Initialize an instance of Joystick with 22 buttons and an XY joystick;
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_JOYSTICK, 
-  NUMBUTTONS, 0,        // Button Count, Hat Switch Count
-  true, true, false,    // X and Y, but no Z Axis
-  false, false, false,  // No Rx, Ry, or Rz
-  false, false, false,  // No rudder or throttle
-  false, false);        // No accelerator, brake, or steering
+  JOYSTICK_BUTTON_COUNT, 0,       // Button Count, Hat Switch Count
+  HAS_X_AXIS, HAS_Y_AXIS, false,  // X and Y, but no Z Axis
+  false, false, false,            // No Rx, Ry, or Rz
+  false, false, false,            // No rudder or throttle
+  false, false);                  // No accelerator, brake, or steering
 
 void setup() {
-  // put your setup code here, to run once:
-  adafruitKeypad.begin();
   Joystick.begin();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  CheckKeypadButtons();
-  CheckAdafruitButtons();
+  CheckButtonMatrixKeypad();
+  CheckAdafruitKeypad();
   delay(10);
 }
 
-void CheckKeypadButtons(void) {
-  if (keypad_physical_buttons.getKeys())
-  {
-    //TODO Scan appropriately for buttons mapped to XY Axis
-    for (int i=4; i<=13; i++)  // Scan the whole key list.
+void CheckButtonMatrixKeypad(void) {
+  // Fills kpd.key[ ] array with up-to 10 active keys.
+  // Returns true if there are ANY active keys.
+  if (button_matrix_keypad.getKeys())
+  {    
+    for (int i=0; i<LIST_MAX; i++)  // Scan the whole key list.
     {
-      if (keypad_physical_buttons.key[i].stateChanged)  // Only find keys that have changed state.
+      if (button_matrix_keypad.key[i].stateChanged)  // Only find keys that have changed state.
       {
-        switch (keypad_physical_buttons.key[i].kstate)
+        switch (button_matrix_keypad.key[i].kstate)
         {
           // Report active key state : IDLE, PRESSED, HOLD, or RELEASED
           case PRESSED:
           case HOLD:
-            Joystick.setButton(keypad_physical_buttons.key[i].kchar-1, 1);
+            //TODO Scan appropriately for buttons mapped to XY Axis
+            Joystick.setButton(button_matrix_keypad.key[i].kchar, 1);
             break;
           case RELEASED:
           case IDLE:
-            Joystick.setButton(keypad_physical_buttons.key[i].kchar-1, 0);
+            Joystick.setButton(button_matrix_keypad.key[i].kchar, 0);
             break;
         }
       }
@@ -100,18 +105,28 @@ void CheckKeypadButtons(void) {
   }
 }
 
-void CheckAdafruitButtons() {
-  adafruitKeypad.tick();
-  
-  for (int i = 14; i <= 25; i++)
-  {
-    if (adafruitKeypad.isPressed(i))
+void CheckAdafruitKeypad() {
+  // Fills kpd.key[ ] array with up-to 10 active keys.
+  // Returns true if there are ANY active keys.
+  if (adafruit_keypad.getKeys())
+  {    
+    for (int i=0; i<LIST_MAX; i++)  // Scan the whole key list.
     {
-      Joystick.setButton(i-1, 1);
-    } 
-    else
-    {
-      Joystick.setButton(i-1, 0);
+      if (adafruit_keypad.key[i].stateChanged)  // Only find keys that have changed state.
+      {
+        switch (adafruit_keypad.key[i].kstate)
+        {
+          // Report active key state : IDLE, PRESSED, HOLD, or RELEASED
+          case PRESSED:
+          case HOLD:
+            Joystick.setButton(adafruit_keypad.key[i].kchar, 1);
+            break;
+          case RELEASED:
+          case IDLE:
+            Joystick.setButton(adafruit_keypad.key[i].kchar, 0);
+            break;
+        }
+      }
     }
   }
 }
