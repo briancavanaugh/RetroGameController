@@ -68,8 +68,16 @@ Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_JOYSTICK,
   false, false, false,            // No rudder or throttle
   false, false);                  // No accelerator, brake, or steering
 
+bool upIsPressed = false;
+bool downIsPressed = false;
+bool leftIsPressed = false;
+bool rightIsPressed = false;
+
+
 void setup() {
   Joystick.begin();
+  Joystick.setXAxisRange(-1, 1);
+  Joystick.setYAxisRange(-1, 1);
 }
 
 void loop() {
@@ -78,7 +86,7 @@ void loop() {
   delay(10);
 }
 
-void CheckButtonMatrixKeypad(void) {
+void CheckButtonMatrixKeypad() {
   // Fills kpd.key[ ] array with up-to 10 active keys.
   // Returns true if there are ANY active keys.
   if (button_matrix_keypad.getKeys())
@@ -92,15 +100,50 @@ void CheckButtonMatrixKeypad(void) {
           // Report active key state : IDLE, PRESSED, HOLD, or RELEASED
           case PRESSED:
           case HOLD:
-            //TODO Scan appropriately for buttons mapped to XY Axis
-            Joystick.setButton(button_matrix_keypad.key[i].kchar, 1);
+            if (button_matrix_keypad.key[i].kchar == 'U'){
+              upIsPressed = true;
+            } else if (button_matrix_keypad.key[i].kchar == 'D'){
+              downIsPressed = true;
+            } else if (button_matrix_keypad.key[i].kchar == 'L'){
+              leftIsPressed = true;
+            } else if (button_matrix_keypad.key[i].kchar == 'R'){
+              rightIsPressed = true;
+            } else {
+              Joystick.setButton(button_matrix_keypad.key[i].kchar, 1);
+            }
             break;
           case RELEASED:
           case IDLE:
-            Joystick.setButton(button_matrix_keypad.key[i].kchar, 0);
+            if (button_matrix_keypad.key[i].kchar == 'U'){
+              upIsPressed = false;
+            } else if (button_matrix_keypad.key[i].kchar == 'D'){
+              downIsPressed = false;
+            } else if (button_matrix_keypad.key[i].kchar == 'L'){
+              leftIsPressed = false;
+            } else if (button_matrix_keypad.key[i].kchar == 'R'){
+              rightIsPressed = false;
+            } else {
+              Joystick.setButton(button_matrix_keypad.key[i].kchar, 0);
+            }
             break;
         }
       }
+    }
+
+    if(upIsPressed){
+      Joystick.setYAxis(-1);
+    } else if(downIsPressed){
+      Joystick.setYAxis(1);
+    } else{
+      Joystick.setYAxis(0);
+    }
+    
+    if(leftIsPressed){
+      Joystick.setXAxis(-1);
+    } else if(rightIsPressed){
+      Joystick.setXAxis(1);
+    } else{
+      Joystick.setXAxis(0);
     }
   }
 }
