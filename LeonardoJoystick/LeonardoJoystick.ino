@@ -13,19 +13,19 @@
 const byte BUTTON_MATRIX_ROWS = 4;
 const byte BUTTON_MATRIX_COLS = 4;
 
-// Define the symbols on the buttons in the button matrix
+// Define the symbols in the joystick/button matrix
 char button_matrix_buttons[BUTTON_MATRIX_ROWS][BUTTON_MATRIX_COLS] = {
-  {8,9,33,33},
-  {2,3,6,7},
-  {0,1,4,5},
-  {'U','D','L','R'}
+  {8,9,33,33},      // Select     , Start     , Empty     , Empty
+  {2,3,6,7},        // Y (Blue)   , X (Yellow), L2 (Black), R2 (Black)
+  {0,1,4,5},        // B (Green)  , A (Red)   , L1 (White), R1 (White)
+  {'U','D','L','R'} // Joystick Up, Down      , Left      , Right
 };
 
-// Connect to the row and column pinouts of the button matrix
+// Connect to the row and column pinouts of the joystick/button matrix
 byte button_matrix_row_pins[BUTTON_MATRIX_ROWS] = {6,7,8,9}; 
 byte button_matrix_col_pins[BUTTON_MATRIX_COLS] = {2,3,4,5};
 
-// Initialize an instance of Keypad for the Button Matrix
+// Initialize an instance of Keypad for the joystick/button Matrix
 Keypad button_matrix_keypad = Keypad(makeKeymap(button_matrix_buttons), 
   button_matrix_row_pins, 
   button_matrix_col_pins, 
@@ -38,10 +38,10 @@ const byte ADAFRUIT_KEYPAD_COLS = 3;
 
 // Define the symbols on the buttons of the keypad
 char adafruit_keypad_keys[ADAFRUIT_KEYPAD_ROWS][ADAFRUIT_KEYPAD_COLS] = {
-    {10,11,12},
-    {13,14,15},
-    {16,17,18},
-    {19,20,21}
+    {10,11,12}, //1, 2, 3
+    {13,14,15}, //4, 5, 6
+    {16,17,18}, //7, 8, 9
+    {19,20,21}  //*, 0, #
 };
 
 // Connect to the row and column pinouts of the keypad
@@ -61,12 +61,14 @@ const bool HAS_X_AXIS = true;
 const bool HAS_Y_AXIS = true; 
 
 // Initialize an instance of Joystick with 22 buttons and an XY joystick;
+JOYSTICK_DEFAULT_REPORT_ID = 0x03  //Player 1
+//JOYSTICK_DEFAULT_REPORT_ID = 0x04  //Player 2
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_JOYSTICK, 
   JOYSTICK_BUTTON_COUNT, 0,       // Button Count, Hat Switch Count
   HAS_X_AXIS, HAS_Y_AXIS, false,  // X and Y, but no Z Axis
   false, false, false,            // No Rx, Ry, or Rz
-  false, false, false,            // No rudder or throttle
-  false, false);                  // No accelerator, brake, or steering
+  false, false, false,            // No rudder, throttle, or accelerator
+  false, false);                  // No brake or steering
 
 bool upIsPressed = false;
 bool downIsPressed = false;
