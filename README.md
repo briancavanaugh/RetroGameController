@@ -63,7 +63,7 @@ Code for making an Arduino Leonardo act as a Custom Game Controller
 | 0          | Button 21 | Adafruit Keypad-B4      | 11         | A3      |
 | #          | Button 22 | Adafruit Keypad-C4      | 12         | A3      |
 
-####Map Rows and Columns to a single Arduino Pin
+#### Map Rows and Columns to a single Arduino Pin
 | Mapping Row/Column               | Arduino Pin |
 |----------------------------------|-------------|
 | Joystick and Buttons Column A    | 2           |
