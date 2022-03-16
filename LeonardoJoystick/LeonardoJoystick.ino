@@ -22,8 +22,8 @@ char button_matrix_buttons[BUTTON_MATRIX_ROWS][BUTTON_MATRIX_COLS] = {
 };
 
 // Connect to the row and column pinouts of the joystick/button matrix
-byte button_matrix_row_pins[BUTTON_MATRIX_ROWS] = {6,7,8,9}; 
-byte button_matrix_col_pins[BUTTON_MATRIX_COLS] = {2,3,4,5};
+byte button_matrix_row_pins[BUTTON_MATRIX_ROWS] = {2,3,4,5};
+byte button_matrix_col_pins[BUTTON_MATRIX_COLS] = {A0,A1,A2,A3};
 
 // Initialize an instance of Keypad for the joystick/button Matrix
 Keypad button_matrix_keypad = Keypad(makeKeymap(button_matrix_buttons), 
@@ -45,8 +45,8 @@ char adafruit_keypad_keys[ADAFRUIT_KEYPAD_ROWS][ADAFRUIT_KEYPAD_COLS] = {
 };
 
 // Connect to the row and column pinouts of the keypad
-byte adafruit_keypad_row_pins[ADAFRUIT_KEYPAD_ROWS] = {A0,A1,A2,A3};
-byte adafruit_keypad_col_pins[ADAFRUIT_KEYPAD_COLS] = {10,11,12};
+byte adafruit_keypad_row_pins[ADAFRUIT_KEYPAD_ROWS] = {9,10,11,12};
+byte adafruit_keypad_col_pins[ADAFRUIT_KEYPAD_COLS] = {6,7,8};
 
 // Initialize an instance of Keypad for the Adafruit Keypad
 Keypad adafruit_keypad = Keypad(makeKeymap(adafruit_keypad_keys),
