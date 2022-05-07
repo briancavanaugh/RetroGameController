@@ -61,7 +61,7 @@ const bool HAS_X_AXIS = true;
 const bool HAS_Y_AXIS = true; 
 
 // Initialize an instance of Joystick with 22 buttons and an XY joystick;
-JOYSTICK_DEFAULT_REPORT_ID = 0x03  //Player 1
+//JOYSTICK_DEFAULT_REPORT_ID = 0x03  //Player 1
 //JOYSTICK_DEFAULT_REPORT_ID = 0x04  //Player 2
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_JOYSTICK, 
   JOYSTICK_BUTTON_COUNT, 0,       // Button Count, Hat Switch Count
