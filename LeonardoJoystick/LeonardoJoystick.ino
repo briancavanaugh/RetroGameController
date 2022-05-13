@@ -63,7 +63,7 @@ const bool HAS_Y_AXIS = true;
 // Initialize an instance of Joystick with 22 buttons and an XY joystick;
 //JOYSTICK_DEFAULT_REPORT_ID = 0x03  //Player 1
 //JOYSTICK_DEFAULT_REPORT_ID = 0x04  //Player 2
-Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_JOYSTICK, 
+Joystick_ Joystick(0x04, JOYSTICK_TYPE_JOYSTICK, 
   JOYSTICK_BUTTON_COUNT, 0,       // Button Count, Hat Switch Count
   HAS_X_AXIS, HAS_Y_AXIS, false,  // X and Y, but no Z Axis
   false, false, false,            // No Rx, Ry, or Rz
